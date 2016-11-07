@@ -26,7 +26,24 @@ module.exports.policies = {
   *                                                                          *
   ***************************************************************************/
 
-  // '*': true,
+  '*': true,
+
+  ClientController: {
+    create: true
+  },
+
+  TxController: {
+    process: function(req, res, next){
+      req.check({ 
+        amount: {
+          isInt: true,
+          errorMessage: 'amount must be integer'
+        }
+      })
+
+      next(req.validationErrors())
+    }
+  }
 
   /***************************************************************************
   *                                                                          *
