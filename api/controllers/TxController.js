@@ -16,7 +16,7 @@ module.exports = {
 	process: function(req, res){
     var src = { name: req.param('src'), id: req.param('srcId') }
       , dst = { name: req.param('dst'), id: req.param('dstId') }
-      , amount = req.param('amount')
+      , amount = parseInt(req.param('amount'), 10)
 
     // check if rx name is valid
 		if(!Rx.isRx(src.name) || !Rx.isRx(dst.name))
@@ -24,21 +24,25 @@ module.exports = {
 
 		// load rxs
 		async.parallel([
-			function(cb){ sails.models[src.name].findById(src.id, cb) },
-			function(cb){ sails.models[dst.name].findById(dst.id, cb) }
+			function(cb){ sails.models[src.name].findById(src.id).populate('user').exec(cb) },
+			function(cb){ sails.models[dst.name].findById(dst.id).populate('user').exec(cb) }
 		], function(err, rxs){
 			if(err) return res.badRequest(err)
+			
+			rxs = _.flatten(rxs)
+			if(rxs.length != 2) return res.badRequest('cannot find rx')
 
 			var tx = new Tx({
-	      src: { rx: new Rx(rxs[0].name, rxs[0].toObject()) },
-	      dst: { rx: new Rx(rxs[0].name, rxs[1].toObject()) },
-	      amount: amount
+	      src: { rx: new Rx(src.name, rxs[0]) },
+	      dst: { rx: new Rx(dst.name, rxs[1]) },
+	      amount: amount,
+	      client: req.data.client
 	    })
 
-	    tx.prepare(function(err, rxs){
-	    	console.log(rxs)
+	    tx.transfer(function(err){
 	      if(err) return res.badRequest(err)
-	      res.ok(rxs)
+
+	      res.ok(tx)
 	    })
 
 		})

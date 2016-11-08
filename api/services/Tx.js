@@ -1,4 +1,3 @@
-var pg = require('pg')
 
 var Tx = module.exports = function(tx){
 	tx = tx || {}
@@ -8,6 +7,7 @@ var Tx = module.exports = function(tx){
 	this.src = tx.src || {}
 	this.dst = tx.dst || {}
 	this.queries = []
+	this.client = tx.client
 
 	if(!(this.src.rx instanceof Rx) || !(this.dst.rx instanceof Rx))
 		throw Err('Tx requires src.rx & dst.rx to be Rx instances')
@@ -28,37 +28,25 @@ Tx.prototype.prepare = function(callback){
 		function(cb){ self.dst.rx.prepare(self, self.dst.rx, self.amount, cb) }
 	], function(err, rxs){
 		if(err) return callback(err)
-		
+
+		var values = [self.src.rx.data.id, self.dst.rx.data.id, self.src.rx.data.user.id, self.dst.rx.data.user.id, self.amount, self.client.id].join('')
+
+		// update ledger
+		self.queries.push('INSERT INTO ledger ("srcWallet", "dstWallet", "srcUser", "dstUser", "amount", "client") VALUES (' + values + ');')
+
 		// end sql transaction
 		self.queries.push('END;')
 
-		callback(null, rxs)
+		callback()
 	})
 }
 
 Tx.prototype.save = function(callback){
-	var client = new pg.Client({
- 		host: 'localhost',
-    database: 'corewallet',
-    port: 5432
-	})
+	var self = this
 
-	client.connect(function (err) {
-	  if (err) throw err;
-
-	  // execute a query on our database
-	  client.query('SELECT * FROM wallet', function (err, result) {
-	    if (err) throw err;
-
-	    // just print the result to the console
-	    console.log(result.rows[0]); // outputs: { name: 'brianc' }
-
-	    // disconnect the client
-	    client.end(function (err) {
-				callback(err)
-	    });
-	  });
-	})
+	console.log(self.queries.join(''))
+	Pg.query(self.queries.join(''), callback)
+	
 }
 
 Tx.prototype.transfer = function(callback){

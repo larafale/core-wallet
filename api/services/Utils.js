@@ -14,6 +14,11 @@ module.exports = {
 	  
 	  token: function(prefix){ 
 	    return (prefix || '') + require('crypto').createHash('md5').update(module.exports.string.random(8)).digest("hex") 
+	  },
+
+	  cardize: function(card, mask){
+	  	mask = mask || '0'
+	  	return card.substr(0,6) + _.repeat(mask, 4) + card.substr(11, 4)
 	  }
 		
 	}

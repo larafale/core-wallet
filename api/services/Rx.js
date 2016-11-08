@@ -3,7 +3,6 @@ var Rx = module.exports = function(name, data){
 	this.eid = Utils.string.random()
 	this.name = name
 	this.data = data || {}
-
 	return this
 }
 
@@ -17,7 +16,7 @@ Rx.prototype.list = [
 	'wallet'
 ]
 
-Rx.prototype.isRx = function(name){
+Rx.isRx = function(name){
 	return _.contains(Rx.prototype.list, (name||'').toLowerCase())
 }
 

@@ -28,13 +28,22 @@ module.exports = _.merge({}, baseModel, {
     expireAt: {
       type: 'date',
       required: true
-    },
-    
-    providerCardId: {
-  		type: 'string',
-  		required: true
-  	}
+    }
 
+  },
+
+  beforeValidate: function(obj, next){
+    obj.expireAt = new Date(obj.expire)
+    next()
+  },
+
+  beforeCreate: function(obj, next){
+    Author.create(_.assign({}, obj, { amount: 1 }), function(err, author){
+      if(err) return next(err)
+      obj.number = Utils.string.cardize(obj.number, '*')
+      obj.alias = author.alias
+      next()
+    })
   }
 
 })

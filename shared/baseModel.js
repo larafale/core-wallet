@@ -2,12 +2,12 @@ module.exports = {
 	
 	attributes: {
 		
-		clientId: {
+		client: {
 			model: 'client',
 			required: true
 		},
 
-		userId: {
+		user: {
 			model: 'user',
 			required: true
 		},

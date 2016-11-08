@@ -9,12 +9,12 @@ module.exports = {
 
   attributes: {
 
-				clientId: {
+				client: {
 					model: 'client',
 					required: true
 				},
 
-				userId: {
+				user: {
 					model: 'user',
 					required: true
 				},
@@ -39,51 +39,59 @@ module.exports = {
 					defaultsTo: 0
 				},
 
-				srcAudiotelId: {
+				srcUser: {
+					model: 'user'
+				},
+
+				dstUser: {
+					model: 'user'
+				},
+
+				srcAudiotel: {
 					model: 'audiotel'
 				},
 
-				srcAuthorId: {
+				srcAuthor: {
 					model: 'author'
 				},
 
-				srcBankaccountId: {
+				srcBankaccount: {
 					model: 'bankaccount'
 				},
 
-				srcCardId: {
+				srcCard: {
 					model: 'card'
 				},
 
-				srcFeeId: {
+				srcFee: {
 					model: 'fee'
 				},
 
-				srcWalletId: {
+				srcWallet: {
 					model: 'wallet'
 				},
 
-				dstAudiotelId: {
+				dstAudiotel: {
 					model: 'audiotel'
 				},
 
-				dstAuthorId: {
+				dstAuthor: {
 					model: 'author'
 				},
 
-				dstBankaccountId: {
+				dstBankaccount: {
 					model: 'bankaccount'
 				},
 
-				dstCardId: {
+				dstCard: {
 					model: 'card'
 				},
 
-				dstFeeId: {
+				dstFee: {
 					model: 'fee'
 				},
 
-				dstWalletId: {
+				dstWallet: {
 					model: 'wallet'
 				}
 

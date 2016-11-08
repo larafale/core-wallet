@@ -33,16 +33,44 @@ module.exports.policies = {
   },
 
   TxController: {
-    process: function(req, res, next){
-      req.check({ 
-        amount: {
-          isInt: true,
-          errorMessage: 'amount must be integer'
-        }
-      })
+    process: [
+      'token', 
+      function(req, res, next){
+        req.check({ 
+          amount: { isInt: true }
+        })
+        next(req.validationErrors())
+      }
+    ]
+  },
 
-      next(req.validationErrors())
-    }
+  CardController: {
+    create: [
+      'token', 
+      function(req, res, next){
+        req.check({ 
+          number: { isCreditCard: true },
+          cvv: { isNumeric: true, isLength: { options: [{ min: 3, max: 3 }] } },
+          holder: { isAlpha: true }
+        })
+        next(req.validationErrors())
+      }
+    ]
+  },
+
+  AuthorController: {
+    create: [
+      'token', 
+      // function(req, res, next){
+      //   req.check({ 
+      //     number: { isCreditCard: true },
+      //     cvv: { isNumeric: true, isLength: { options: [{ min: 3, max: 3 }] } },
+      //     holder: { isAlpha: true },
+      //     amount: { isInt: { options: [{ min: 1 }] } }
+      //   })
+      //   next(req.validationErrors())
+      // }
+    ]
   }
 
   /***************************************************************************
