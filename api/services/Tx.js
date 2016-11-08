@@ -1,26 +1,39 @@
 var pg = require('pg')
 
-var Tx = module.exports = function(){
-	this.srcRx = {}
-	this.dstRx = {}
-	this.queries = ['BEGIN;']
+var Tx = module.exports = function(tx){
+	tx = tx || {}
+
+	this.eid = Utils.string.random()
+	this.amount = tx.amount || 0
+	this.src = tx.src || {}
+	this.dst = tx.dst || {}
+	this.queries = []
+
+	if(!(this.src.rx instanceof Rx) || !(this.dst.rx instanceof Rx))
+		throw Err('Tx requires src.rx & dst.rx to be Rx instances')
+
+	if(isNaN(this.amount) || this.amount === 0)
+		throw Err('Tx amount need a value')
 }
 
-Tx.prototype.prepare = function(amount, callback){
+Tx.prototype.prepare = function(callback){
 	var self = this
-	
-	if(!self.srcRx || !self.dstRx)
-		return callback('missing rx')
 
+	// start sql transaction
+	self.queries = ['BEGIN;']
+
+	// prepare each rx
 	async.parallel([
-		function(cb){ self.srcRx.prepare(-amount, self, cb) },
-		function(cb){ self.dstRx.prepare(amount, self, cb) }
-	], function(err, results){
+		function(cb){ self.src.rx.prepare(self, self.src.rx, -self.amount, cb) },
+		function(cb){ self.dst.rx.prepare(self, self.dst.rx, self.amount, cb) }
+	], function(err, rxs){
 		if(err) return callback(err)
+		
+		// end sql transaction
 		self.queries.push('END;')
-		callback()
+
+		callback(null, rxs)
 	})
-	
 }
 
 Tx.prototype.save = function(callback){
@@ -48,10 +61,11 @@ Tx.prototype.save = function(callback){
 	})
 }
 
-Tx.prototype.transfer = function(amount, callback){
+Tx.prototype.transfer = function(callback){
 	var self = this
 
-	self.prepare(amount, function(err, rxs){
+	self.prepare(function(err, rxs){
+		if(err) return callback(err)
 		self.save(callback)
 	})
 }

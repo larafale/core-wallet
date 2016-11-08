@@ -13,21 +13,19 @@ var wallet = module.exports = _.merge({}, baseModel, {
 
   },
 
-  prepare: function(amount, tx, callback){
+  prepare: function(tx, rx, amount, callback){
   	var self = this
 
-  	if(self.amount + amount < 0)
-  		return callback(new Error('1'))
+    // handle errors
+  	if(rx.data.amount + amount < 0)
+  		return callback(new Err('insufficient funds'))
 
+    // mute rx amount
+    rx.data.amount += amount
+    // set query
   	tx.queries.push('UPDATE WALLET WHERE id = ' + self.id + ' SET AMOUNT = AMOUNT + ' + amount + ';')
-  	callback(null, tx)
+
+  	callback(null, rx)
   }
 
 })
-
-
-module.exports.instantiate = function(data){
-	data.prepare = wallet.prepare
-	data.id = data.id || Utils.string.random()
-	return data
-}
