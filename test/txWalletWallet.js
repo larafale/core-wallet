@@ -9,7 +9,8 @@ describe('tx/wallet/wallet', function() {
     var tx = new Tx({
       src: { rx: new Rx('wallet', { amount: 0, user: { firstName: 'bob', lastName: 'batard'  } }) },
       dst: { rx: new Rx('wallet', { amount: 0, user: { firstName: 'louis', lastName: 'grellet' } }) },
-      amount: 1
+      amount: 1,
+      client: { id: 1 }
     })
 
     tx.prepare(function(err){
@@ -26,7 +27,8 @@ describe('tx/wallet/wallet', function() {
     var tx = new Tx({
       src: { rx: new Rx('wallet', { amount: 5, user: { firstName: 'bob' } }) },
       dst: { rx: new Rx('wallet', { amount: 0, user: { firstName: 'louis', lastName: 'grellet' } }) },
-      amount: 1
+      amount: 1,
+      client: { id: 1 }
     })
 
     tx.prepare(function(err){
@@ -43,7 +45,8 @@ describe('tx/wallet/wallet', function() {
     var tx = new Tx({
       src: { rx: new Rx('wallet', { amount: 5, user: { firstName: 'bob', lastName: 'batard' } }) },
       dst: { rx: new Rx('wallet', { amount: 0, user: { firstName: 'louis', lastName: 'grellet' } }) },
-      amount: 1
+      amount: 1,
+      client: { id: 1 }
     })
 
     tx.prepare(function(err){

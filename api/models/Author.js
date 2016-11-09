@@ -30,7 +30,7 @@ module.exports = _.merge({}, baseModel, {
 
       obj.alias = author.alias
       obj.providerAuthorId = author.transactionId
-      next(null, obj)
+      next()
     })
 
   }
