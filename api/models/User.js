@@ -16,12 +16,14 @@ module.exports = {
     
     firstName: {
       type: 'string',
-      required: true
+      required: true,
+      alphadashed: true
     },
     
     lastName: {
       type: 'string',
-      required: true
+      required: true,
+      alphadashed: true
     },
   	
   	phone: {
@@ -29,7 +31,8 @@ module.exports = {
   	},
   	
   	email: {
-  		type: 'string'
+  		type: 'string',
+      email: true
   	},
   	
   	nationality: {
@@ -41,7 +44,8 @@ module.exports = {
   	},
   	
   	addressZipcode: {
-  		type: 'string'
+  		type: 'string',
+      numeric: true
   	},
 
   	addressCity: {

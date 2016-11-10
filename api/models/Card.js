@@ -12,11 +12,13 @@ module.exports = _.merge({}, baseModel, {
   attributes: {
 
     alias: {
-      type: 'string'
+      type: 'string',
+      alphanumeric: true
     },
 
   	number: {
   		type: 'string',
+      numeric: true,
   		required: true
   	},
     

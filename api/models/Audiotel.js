@@ -13,7 +13,8 @@ module.exports = _.merge({}, baseModel, {
 
   	code: {
   		type: 'string',
-  		required: true
+  		required: true,
+      alphanumeric: true
   	},
 
   	phone: {

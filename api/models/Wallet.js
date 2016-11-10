@@ -13,8 +13,13 @@ var wallet = module.exports = _.merge({}, baseModel, {
 
   },
 
+  beforeCreate: function(obj, next){
+    obj.amount = 0
+    next()
+  },
+
   prepare: function(tx, rx, amount, callback){
-  	var self = this
+    var self = this
 
     // handle errors
   	if(rx.data.amount + amount < 0)

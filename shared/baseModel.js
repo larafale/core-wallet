@@ -22,7 +22,7 @@ module.exports = {
 
 	// every rx must implement this function
 	prepare: function(amount, tx, callback){
-		return false
+		return callback(new Error('prepare not implemented'))
 	}
 
 }

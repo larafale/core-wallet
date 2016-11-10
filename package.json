@@ -40,6 +40,7 @@
   "license": "",
   "devDependencies": {
     "chai": "3.5.0",
-    "sails-hook-autoreload": "0.13.2"
+    "sails-hook-autoreload": "0.13.2",
+    "sinon": "2.0.0-pre.4"
   }
 }

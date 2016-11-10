@@ -13,7 +13,8 @@ module.exports = _.merge({}, baseModel, {
 
   	alias: {
   		type: 'string',
-  		required: true
+  		required: true,
+      alphanumeric: true
   	},
 
   	providerAuthorId: {
@@ -26,7 +27,7 @@ module.exports = _.merge({}, baseModel, {
   beforeValidate: function(obj, next){
 
     Psp.author(obj, function(err, author){
-      if(err) true // TODO log stuff for fraud
+      if(err) return next(err) // TODO log stuff for fraud
 
       obj.alias = author.alias
       obj.providerAuthorId = author.transactionId

@@ -13,12 +13,14 @@ module.exports = _.merge({}, baseModel, {
   	
   	iban: {
   		type: 'string',
-  		required: true
+  		required: true,
+      alphanumeric: true
   	},
 
   	swift: {
   		type: 'string',
-  		required: true
+  		required: true,
+      alphanumeric: true
   	},
   		
   	providerBankAccountId: {

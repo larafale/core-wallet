@@ -11,6 +11,7 @@ module.exports = {
 
   	name: { 
   		type: 'string',
+      alphadashed: true,
   		required: true
   	},
 
