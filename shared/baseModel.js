@@ -4,11 +4,13 @@ module.exports = {
 		
 		client: {
 			model: 'client',
+			type: 'integer',
 			required: true
 		},
 
 		user: {
 			model: 'user',
+			type: 'integer',
 			required: true
 		},
 

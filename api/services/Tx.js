@@ -26,10 +26,13 @@ Tx.prototype.prepare = function(callback){
 	async.parallel([
 		function(cb){ self.src.rx.prepare(self, self.src.rx, -self.amount, cb) },
 		function(cb){ self.dst.rx.prepare(self, self.dst.rx, self.amount, cb) }
-	], function(err, rxs){
+	], function(err, queries){
 		if(err) return callback(err)
 
 		var values = [self.src.rx.data.id, self.dst.rx.data.id, self.src.rx.data.user.id, self.dst.rx.data.user.id, self.amount, self.client.id].join('')
+
+		// get queries returned from 
+		self.queries = self.queries.concat(queries)
 
 		// update ledger
 		self.queries.push('INSERT INTO ledger ("srcWallet", "dstWallet", "srcUser", "dstUser", "amount", "client") VALUES (' + values + ');')
@@ -44,9 +47,7 @@ Tx.prototype.prepare = function(callback){
 Tx.prototype.save = function(callback){
 	var self = this
 
-	console.log(self.queries.join(''))
 	Pg.query(self.queries.join(''), callback)
-	
 }
 
 Tx.prototype.transfer = function(callback){

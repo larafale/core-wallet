@@ -24,3 +24,8 @@ Rx.prototype.prepare = function(tx, rx, amount, callback){
 	var self = this
 	sails.models[self.name].prepare(tx, rx, amount, callback)
 }
+
+Rx.prototype.create = function(tx, rx, amount, callback){
+	var self = this
+	sails.models[self.name].prepare(tx, rx, amount, callback)
+}

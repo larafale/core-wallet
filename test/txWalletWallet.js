@@ -7,8 +7,8 @@ describe('tx/wallet/wallet', function() {
   it('insufficient funds', function(done) {
 
     var tx = new Tx({
-      src: { rx: new Rx('wallet', { amount: 0, user: { firstName: 'bob', lastName: 'batard'  } }) },
-      dst: { rx: new Rx('wallet', { amount: 0, user: { firstName: 'louis', lastName: 'grellet' } }) },
+      src: { rx: new Rx('wallet', { id: 1, amount: 0, user: { firstName: 'bob', lastName: 'batard'  } }) },
+      dst: { rx: new Rx('wallet', { id: 2, amount: 0, user: { firstName: 'louis', lastName: 'grellet' } }) },
       amount: 1,
       client: { id: 1 }
     })
@@ -25,8 +25,8 @@ describe('tx/wallet/wallet', function() {
   it('missing last name', function(done) {
 
     var tx = new Tx({
-      src: { rx: new Rx('wallet', { amount: 5, user: { firstName: 'bob' } }) },
-      dst: { rx: new Rx('wallet', { amount: 0, user: { firstName: 'louis', lastName: 'grellet' } }) },
+      src: { rx: new Rx('wallet', { id: 1, amount: 5, user: { firstName: 'bob' } }) },
+      dst: { rx: new Rx('wallet', { id: 2, amount: 0, user: { firstName: 'louis', lastName: 'grellet' } }) },
       amount: 1,
       client: { id: 1 }
     })
@@ -43,8 +43,8 @@ describe('tx/wallet/wallet', function() {
   it('success', function(done) {
     
     var tx = new Tx({
-      src: { rx: new Rx('wallet', { amount: 5, user: { firstName: 'bob', lastName: 'batard' } }) },
-      dst: { rx: new Rx('wallet', { amount: 0, user: { firstName: 'louis', lastName: 'grellet' } }) },
+      src: { rx: new Rx('wallet', { id: 1, amount: 5, user: { firstName: 'bob', lastName: 'batard' } }) },
+      dst: { rx: new Rx('wallet', { id: 2, amount: 0, user: { firstName: 'louis', lastName: 'grellet' } }) },
       amount: 1,
       client: { id: 1 }
     })

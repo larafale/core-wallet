@@ -23,20 +23,18 @@ var wallet = module.exports = _.merge({}, baseModel, {
 
     // handle errors
   	if(rx.data.amount + amount < 0)
-  		return callback(new Err('insufficient funds'))
+  		return callback(new Error('insufficient funds'))
 
   	if(!rx.data.user)
-  		return callback(new Err('missing user'))
+  		return callback(new Error('missing user'))
 
   	if(!rx.data.user.lastName)
-  		return callback(new Err('user must have a last name'))
+  		return callback(new Error('user must have a last name'))
 
-    // mute rx amount
+    // update rx amount
     rx.data.amount += amount
-    // set query
-  	tx.queries.push('UPDATE WALLET SET AMOUNT = AMOUNT + ' + amount + ' WHERE id = ' + rx.data.id + ';')
 
-  	callback()
+  	callback(null, 'UPDATE WALLET SET AMOUNT = AMOUNT + ' + amount + ' WHERE id = ' + rx.data.id + ';')
   }
 
 })
