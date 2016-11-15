@@ -29,7 +29,8 @@
   },
   "scripts": {
     "debug": "node debug app.js",
-    "start": "node app.js"
+    "start": "node app.js",
+    "test": "mocha -R spec --recursive test"
   },
   "main": "app.js",
   "repository": {
@@ -39,7 +40,9 @@
   "author": "louis",
   "license": "",
   "devDependencies": {
+    "barrels": "1.6.4",
     "chai": "3.5.0",
+    "sails-generate-test": "0.0.4",
     "sails-hook-autoreload": "0.13.2",
     "sinon": "2.0.0-pre.4"
   }
