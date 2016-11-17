@@ -16,6 +16,12 @@
  * http://sailsjs.org/#!/documentation/reference/sails.config/sails.config.policies.html
  */
 
+var check = function(data){
+  return function(req, res, next){
+    req.check(data)
+    next(req.validationErrors())
+  }
+}
 
 module.exports.policies = {
 
@@ -28,49 +34,42 @@ module.exports.policies = {
 
   '*': 'token',
 
-  ClientController: {
-    create: true
-  },
+  AudiotelController: {},
 
-  TxController: {
-    process: [
-      'token', 
-      function(req, res, next){
-        req.check({ 
-          amount: { isInt: true }
-        })
-        next(req.validationErrors())
-      }
-    ]
-  },
+  AuthorController: {},
+
+  BankaccountController: {},
 
   CardController: {
     create: [
       'token', 
-      function(req, res, next){
-        req.check({ 
-          number: { isCreditCard: true },
-          cvv: { isNumeric: true, isLength: { options: [{ min: 3, max: 3 }] } },
-          holder: { isAlpha: true }
-        })
-        next(req.validationErrors())
-      }
+      check({ 
+        number: { isCreditCard: true },
+        cvv: { isNumeric: true, isLength: { options: [{ min: 3, max: 3 }] } },
+        holder: { isAlpha: true }
+      })
     ]
   },
 
-  AuthorController: {
-    create: [
+  ClientController: {},
+  
+  FeeController: {},
+
+  LedgerController: {},
+
+  TxController: {
+    process: [
       'token', 
-      // function(req, res, next){
-      //   req.check({ 
-      //     number: { isCreditCard: true },
-      //     cvv: { isNumeric: true, isLength: { options: [{ min: 3, max: 3 }] } },
-      //     holder: { isAlpha: true },
-      //     amount: { isInt: { options: [{ min: 1 }] } }
-      //   })
-      //   next(req.validationErrors())
-      // }
+      check({ 
+        amount: { isInt: true } 
+      })
     ]
+  },
+
+  UserController: {},
+
+  WalletController: {
+    update: false
   }
 
   /***************************************************************************

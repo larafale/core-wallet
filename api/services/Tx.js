@@ -1,4 +1,3 @@
-
 var Tx = module.exports = function(tx){
 	tx = tx || {}
 
@@ -14,6 +13,9 @@ var Tx = module.exports = function(tx){
 
 	if(isNaN(this.amount) || this.amount === 0)
 		throw Err('Tx amount need a value')
+
+	if(this.amount < 0)
+		throw Err('amount cannot be negative')
 }
 
 Tx.prototype.prepare = function(callback){
@@ -21,21 +23,22 @@ Tx.prototype.prepare = function(callback){
 
 	// start sql transaction
 	self.queries = ['BEGIN;']
-
+	
 	// prepare each rx
 	async.parallel([
-		function(cb){ self.src.rx.prepare(self, self.src.rx, -self.amount, cb) },
-		function(cb){ self.dst.rx.prepare(self, self.dst.rx, self.amount, cb) }
+		function(cb){ self.src.rx.prepare({ tx: self, rx: self.src.rx, amount: -self.amount }, cb) },
+		function(cb){ self.dst.rx.prepare({ tx: self, rx: self.dst.rx, amount: self.amount }, cb) }
 	], function(err, queries){
 		if(err) return callback(err)
 
-		var values = [self.src.rx.data.id, self.dst.rx.data.id, self.src.rx.data.user.id, self.dst.rx.data.user.id, self.amount, self.client.id].join('')
+		var fields = ['"srcWallet"', '"dstWallet"', '"srcUser"', '"dstUser"', '"amount"', '"client"'].join(',')
+			, values = [self.src.rx.data.id, self.dst.rx.data.id, self.src.rx.data.user.id, self.dst.rx.data.user.id, self.amount, self.client.id].join(',')
 
 		// get queries returned from 
 		self.queries = self.queries.concat(queries)
 
 		// update ledger
-		self.queries.push('INSERT INTO ledger ("srcWallet", "dstWallet", "srcUser", "dstUser", "amount", "client") VALUES (' + values + ');')
+		self.queries.push('INSERT INTO ledger (' + fields + ') VALUES (' + values + ');')
 
 		// end sql transaction
 		self.queries.push('END;')
@@ -53,8 +56,8 @@ Tx.prototype.save = function(callback){
 Tx.prototype.transfer = function(callback){
 	var self = this
 
-	self.prepare(function(err, rxs){
-		if(err) return callback(err)
-		self.save(callback)
-	})
+	async.series([
+		function(cb){ self.prepare(cb) },
+		function(cb){ self.save(cb) }
+	], callback)
 }

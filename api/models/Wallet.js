@@ -18,23 +18,26 @@ var wallet = module.exports = _.merge({}, baseModel, {
     next()
   },
 
-  prepare: function(tx, rx, amount, callback){
+  prepare: function(options, callback){
     var self = this
+      , rx = options.rx
+      , amount = options.amount
+      , query = 'UPDATE WALLET SET AMOUNT = AMOUNT + ' + amount + ' WHERE id = ' + rx.data.id + ';'
 
     // handle errors
   	if(rx.data.amount + amount < 0)
-  		return callback(new Error('insufficient funds'))
+  		return callback(Err('insufficient funds'))
 
   	if(!rx.data.user)
-  		return callback(new Error('missing user'))
+  		return callback(Err('missing user'))
 
   	if(!rx.data.user.lastName)
-  		return callback(new Error('user must have a last name'))
+  		return callback(Err('user must have a last name'))
 
     // update rx amount
     rx.data.amount += amount
 
-  	callback(null, 'UPDATE WALLET SET AMOUNT = AMOUNT + ' + amount + ' WHERE id = ' + rx.data.id + ';')
+  	callback(null, query)
   }
 
 })

@@ -8,16 +8,9 @@ before(function (done) {
   // Lift Sails with test database
   Sails.load({
     port: port,
-    globals: {
-      sails: true
-    },
-    log: {
-      level: 'error'
-    },
-    models: {
-      connection: 'localDiskDb',
-      migrate: 'drop'
-    }
+    globals: { sails: true },
+    log: { level: 'error' },
+    models: { connection: 'memory', migrate: 'drop' }
   }, function(err, sails) {
     if (err)
       return done(err)
@@ -25,9 +18,9 @@ before(function (done) {
     // Load fixtures
     var barrels = new Barrels()
 
-    // Save original objects in `fixtures` variable
-    Fixtures = barrels.data
-    Sinon = require('sinon')
+    global.Fixtures = barrels.data
+    global.Sinon = require('sinon')
+    global.assert = require('chai').assert
 
     // Populate the DB
     barrels.populate(function(err) {

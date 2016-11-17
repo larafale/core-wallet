@@ -13,12 +13,13 @@ module.exports = _.merge({}, baseModel, {
 
     alias: {
       type: 'string',
-      alphanumeric: true
+      alphanumeric: true,
+      unique: true
     },
 
   	number: {
   		type: 'string',
-      numeric: true,
+      creditcard: true,
   		required: true
   	},
     
@@ -40,9 +41,10 @@ module.exports = _.merge({}, baseModel, {
   },
 
   beforeCreate: function(obj, next){
-    Author.create(_.assign({}, obj, { amount: 1 }), function(err, author){
+    Author.create(obj, function(err, author){
       if(err) return next(err)
-      obj.number = Utils.string.cardize(obj.number, '*')
+
+      obj.number = Utils.string.redact(obj.number, '*')
       obj.alias = author.alias
       next()
     })

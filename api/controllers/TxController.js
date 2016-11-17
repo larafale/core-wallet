@@ -20,27 +20,34 @@ module.exports = {
 
     // check if rx name is valid
 		if(!Rx.isRx(src.name) || !Rx.isRx(dst.name))
-			return res.badRequest('bad rx')
+			return res.negotiate(Err('bad rx'))
 
 		// load rxs
-		async.parallel([
-			function(cb){ sails.models[src.name].findById(src.id).populate('user').exec(cb) },
-			function(cb){ sails.models[dst.name].findById(dst.id).populate('user').exec(cb) }
-		], function(err, rxs){
-			if(err) return res.badRequest(err)
+		async.parallel({
+			src: function(cb){ sails.models[src.name].findOneById(src.id).populate('user').exec(cb) },
+			dst: function(cb){ sails.models[dst.name].findOneById(dst.id).populate('user').exec(cb) }
+		}, function(err, rxs){
+			if(err) return res.negotiate(err)
 			
-			rxs = _.flatten(rxs)
-			if(rxs.length != 2) return res.badRequest('cannot find rx')
+			if(_(rxs).values().compact().value().length != 2)
+				return res.negotiate(Err('cannot find rx'))
 
-			var tx = new Tx({
-	      src: { rx: new Rx(src.name, rxs[0]) },
-	      dst: { rx: new Rx(dst.name, rxs[1]) },
-	      amount: amount,
-	      client: req.data.client
-	    })
+			if(rxs.src.id === rxs.dst.id)
+				return res.negotiate(Err('source and destination cannot be the same'))
+			
+			try{
+				var tx = new Tx({
+		      src: { rx: new Rx(src.name, rxs.src) },
+		      dst: { rx: new Rx(dst.name, rxs.dst) },
+		      amount: amount,
+		      client: req.data.client
+		    })
+			}	catch(err){ 
+				return res.negotiate(err) 
+			}
 
 	    tx.transfer(function(err){
-	      if(err) return res.badRequest(err)
+	      if(err) return res.negotiate(err)
 
 	      res.ok(tx)
 	    })

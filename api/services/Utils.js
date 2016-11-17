@@ -13,14 +13,27 @@ module.exports = {
 	  },
 	  
 	  token: function(prefix){ 
-	    return (prefix || '') + require('crypto').createHash('md5').update(module.exports.string.random(8)).digest("hex") 
+	    return (prefix || '') + require('crypto').createHash('md5').update(module.exports.string.random(8)).digest('hex') 
 	  },
 
-	  cardize: function(card, mask){
+	  redact: function(value, mask){
 	  	mask = mask || '0'
-	  	return card.substr(0,6) + _.repeat(mask, 4) + card.substr(11, 4)
+	  	return value.substr(0, 6) + _.repeat(mask, 6) + value.substr(12, 4)
 	  }
 		
+	},
+
+	number: {
+		
+	  round: function(number, decimals){ 
+	    decimals = !decimals && decimals !== 0 ? 2 : 0
+	    return Math.round((number || 0) * Math.pow(10, decimals)) / Math.pow(10, decimals) 
+	  },
+
+	  toCent: function(value){
+	    return module.exports.number.round(value * 100)
+	  }
+
 	}
 
 }

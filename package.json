@@ -1,7 +1,7 @@
 {
-  "name": "sails",
+  "name": "core-wallet",
   "private": true,
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "a Sails application",
   "keywords": [],
   "dependencies": {
@@ -44,6 +44,7 @@
     "chai": "3.5.0",
     "sails-generate-test": "0.0.4",
     "sails-hook-autoreload": "0.13.2",
+    "sails-memory": "0.10.7",
     "sinon": "2.0.0-pre.4"
   }
 }

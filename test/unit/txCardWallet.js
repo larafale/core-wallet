@@ -1,8 +1,4 @@
-// require('../bootstrap.test')
-
-var assert = require('chai').assert
-
-describe('tx/wallet/wallet', function() {
+describe('tx/card/wallet', function() {
 
   it('insufficient funds', function(done) {
   	done()

@@ -1,7 +1,3 @@
-// require('../bootstrap.test')
-
-var assert = require('chai').assert
-
 describe('wallet', function() {
 
   it('wallet cannot be created without client', function(done) {

@@ -27,16 +27,20 @@ module.exports = {
     },
   	
   	phone: {
-  		type: 'string'
+  		type: 'string',
+      unique: true
   	},
   	
   	email: {
   		type: 'string',
-      email: true
+      email: true,
+      unique: true
   	},
   	
   	nationality: {
-  		type: 'string'
+  		type: 'string',
+      enum: ['fr', 'ch', 'be'],
+      defaultsTo: 'fr'
   	},
   	
   	addressLine: {

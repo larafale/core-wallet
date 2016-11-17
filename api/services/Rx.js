@@ -1,4 +1,3 @@
-
 var Rx = module.exports = function(name, data){
 	this.eid = Utils.string.random()
 	this.name = name
@@ -17,15 +16,13 @@ Rx.prototype.list = [
 ]
 
 Rx.isRx = function(name){
-	return _.contains(Rx.prototype.list, (name||'').toLowerCase())
+	return _.contains(this.prototype.list, (name||'').toLowerCase())
 }
 
-Rx.prototype.prepare = function(tx, rx, amount, callback){
-	var self = this
-	sails.models[self.name].prepare(tx, rx, amount, callback)
+Rx.prototype.prepare = function(options, callback){
+	sails.models[this.name].prepare(options, callback)
 }
 
-Rx.prototype.create = function(tx, rx, amount, callback){
-	var self = this
-	sails.models[self.name].prepare(tx, rx, amount, callback)
+Rx.prototype.create = function(options, callback){
+	sails.models[this.name].prepare(options, callback)
 }
